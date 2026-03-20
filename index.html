@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Eid App 🌙</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: white;
+  text-align: center;
+}
+
+#box {
+  margin-top: 60px;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 8px;
+  border-radius: 20px;
+  border: none;
+  background: #ff4da6;
+  color: white;
+}
+
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+/* Fireworks */
+.fire {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: yellow;
+  border-radius: 50%;
+  animation: boom 1s forwards;
+}
+@keyframes boom {
+  to {
+    transform: translateY(-200px) scale(3);
+    opacity: 0;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🌙 Eid Fun App</h2>
+
+<div id="box">
+  <p id="text">Enter your name 😊</p>
+  <input id="name" placeholder="Your name">
+  <button onclick="start()">Start</button>
+</div>
+
+<div id="game" style="display:none;">
+  <h3>Hello <span id="user"></span> 👋</h3>
+
+  <p id="chat">Kaise ho? 😊</p>
+  <button onclick="reply('good')">Achi 😊</button>
+  <button onclick="reply('ok')">Theek 🙂</button>
+
+  <div id="games" style="display:none;">
+    
+    <h3>🎯 Guess Number</h3>
+    <input id="g">
+    <button onclick="guess()">Guess</button>
+    <p id="r"></p>
+
+    <h3>⚡ Click Game</h3>
+    <button onclick="score++">Tap!</button>
+    <p id="s">Score: 0</p>
+
+    <h3>🧠 Quiz</h3>
+    <button onclick="quiz(true)">Khushi</button>
+    <button onclick="quiz(false)">Dukh</button>
+    <p id="qr"></p>
+
+    <button onclick="finish()">Finish 🎉</button>
+
+  </div>
+</div>
+
+<div id="final" style="display:none;">
+  <h2>🎉 Eid Mubarak 🌙</h2>
+  <p>Your Score: <span id="fs"></span></p>
+  <p>Best Score: <span id="best"></span></p>
+  <button onclick="secret()">Unlock Secret 🔐</button>
+  <p id="secretText"></p>
+</div>
+
+<script>
+
+let score=0;
+let best=localStorage.getItem("best") || 0;
+
+function start(){
+  let n=document.getElementById("name").value;
+  if(n=="") return alert("Enter name");
+
+  document.getElementById("user").innerText=n;
+  document.getElementById("box").style.display="none";
+  document.getElementById("game").style.display="block";
+}
+
+function reply(ans){
+  document.getElementById("chat").innerText="Eid kaisi gayi? 🌙";
+  document.getElementById("games").style.display="block";
+}
+
+/* Guess */
+let num=Math.floor(Math.random()*10)+1;
+function guess(){
+  let g=document.getElementById("g").value;
+  if(g==num){ score+=10; document.getElementById("r").innerText="Correct!"; }
+}
+
+/* Click */
+setInterval(()=>{
+  document.getElementById("s").innerText="Score: "+score;
+},200);
+
+/* Quiz */
+function quiz(c){
+  if(c){ score+=10; document.getElementById("qr").innerText="Correct!"; }
+  else document.getElementById("qr").innerText="Wrong!";
+}
+
+/* Finish */
+function finish(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("final").style.display="block";
+  document.getElementById("fs").innerText=score;
+
+  if(score>best){
+    localStorage.setItem("best",score);
+    best=score;
+  }
+
+  document.getElementById("best").innerText=best;
+  fire();
+}
+
+/* Fireworks */
+function fire(){
+  for(let i=0;i<60;i++){
+    let f=document.createElement("div");
+    f.className="fire";
+    f.style.left=Math.random()*100+"%";
+    f.style.top=Math.random()*100+"%";
+    document.body.appendChild(f);
+  }
+}
+
+/* Secret */
+function secret(){
+  document.getElementById("secretText").innerText=
+  "Eid Mubarak! 😊 Stay happy always 🌙✨";
+}
+
+</script>
+
+</body>
+</html>
