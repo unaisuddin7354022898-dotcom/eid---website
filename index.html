@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift For You 🌙</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #ffb7c5; /* Rose Gold/Soft Pink */
+            --bg: #0f172a;    /* Deep Midnight */
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Container for all sections */
+        .stage {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Animated Greeting Text */
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--accent); margin: 0 0 15px 0; }
+        p { font-weight: 300; font-size: 0.95rem; line-height: 1.6; color: #cbd5e1; }
+
+        /* Smooth Inputs & Buttons */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            outline: none;
+        }
+
+        button {
+            background: white;
+            color: var(--bg);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+        }
+
+        /* Navigation Logic */
+        .hidden { display: none; transform: translateY(20px) rotateX(-10deg); opacity: 0; }
+        .active { display: block; animation: slideIn 0.8s forwards; }
+
+        @keyframes slideIn {
+            to { transform: translateY(0) rotateX(0); opacity: 1; }
+        }
+
+        /* Sparkle Effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage">
+        <div id="step1" class="card active">
+            <h1>Salam ✨</h1>
+            <p>I’ve been waiting for you. <br> May I know who’s here?</p>
+            <input type="text" id="userName" placeholder="Your beautiful name..." autocomplete="off">
+            <button onclick="nextStep(1, 2)">Enter 🌙</button>
+        </div>
+
+        <div id="step2" class="card hidden">
+            <h1>Hey <span id="spanName"></span>!</h1>
+            <p>I was just wondering... are you ready to see something special I made for you?</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="nextStep(2, 3)">Yes, show me! ✨</button>
+                <button onclick="alert('Oh come on! You know you want to see it! 😊')" style="background:none; border: 1px solid white; color: white;">Not yet</button>
+            </div>
+        </div>
+
+        <div id="step3" class="card hidden">
+            <h1 style="font-size: 3rem;">🌙</h1>
+            <h1 style="color: white;">Eid Mubarak</h1>
+            <p id="finalMsg"></p>
+            <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.6;">
+                You make the world brighter.
+            </div>
+            <button onclick="location.reload()" style="margin-top:20px; background:none; color:white; border: 1px solid rgba(255,255,255,0.3);">Restart 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(current, next) {
+            const nameValue = document.getElementById('userName').value;
+            
+            if (current === 1 && nameValue.trim() === "") {
+                alert("I'd love to know your name first! 😊");
+                return;
+            }
+
+            // Set the name in text
+            document.getElementById('spanName').innerText = nameValue;
+            document.getElementById('finalMsg').innerText = 
+                `Wishing you a day as beautiful as your smile, ${nameValue}. May every moment of this Eid bring you peace and pure happiness. ✨`;
+
+            // Transition
+            const currCard = document.getElementById('step' + current);
+            const nextCard = document.getElementById('step' + next);
+
+            currCard.style.opacity = '0';
+            currCard.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                currCard.classList.remove('active');
+                currCard.classList.add('hidden');
+                nextCard.classList.remove('hidden');
+                nextCard.classList.add('active');
+                
+                if(next === 3) startMagic();
+            }, 600);
+        }
+
+        function startMagic() {
+            for (let i = 0; i < 60; i++) {
+                setTimeout(createSparkle, i * 50);
+            }
+        }
+
+        function createSparkle() {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            s.style.left = x + 'px';
+            s.style.top = y + 'px';
+            s.style.backgroundColor = ['#ffb7c5', '#fff', '#ffd700'][Math.floor(Math.random()*3)];
+            
+            document.body.appendChild(s);
+            
+            const animation = s.animate([
+                { transform: 'scale(0)', opacity: 0 },
+                { transform: 'scale(1.5)', opacity: 1, offset: 0.5 },
+                { transform: 'scale(0)', opacity: 0 }
+            ], { duration: 2000 });
+
+            animation.onfinish = () => s.remove();
+        }
+    </script>
+</body>
+</html>
